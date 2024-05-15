@@ -6,6 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PokemonDetailsModel(
+    @SerializedName("id") val id: Int,
     @SerializedName("name") val name: String,
     @SerializedName("weight") val weight: Int,
     @SerializedName("height") val height: Int,

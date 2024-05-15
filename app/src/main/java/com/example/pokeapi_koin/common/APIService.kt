@@ -10,6 +10,17 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.FUNCTION)
+annotation class Logger
+
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.FUNCTION)
+annotation class TrackEvent(
+    val event: String,
+    val attributes: Array<String>
+)
+
 interface APIService {
     @GET("pokemon")
     suspend fun getPokemonList(
@@ -17,8 +28,15 @@ interface APIService {
         @Query("limit") limit: Int
     ): Response<PokemonListModel>
 
+    @Logger
     @GET("pokemon/{name}")
     suspend fun getPokemonDetails(
         @Path("name") name: String
     ): Response<PokemonDetailsModel>
+}
+
+class EventTracker {
+    fun trackEvent(event: String, attributes: Array<String>) {
+        // Analytics implementation
+    }
 }

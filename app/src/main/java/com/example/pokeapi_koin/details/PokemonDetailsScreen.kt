@@ -8,7 +8,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,6 +31,7 @@ import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
+import com.example.pokeapi_koin.common.AppTopBar
 import com.example.pokeapi_koin.common.ErrorState
 import org.koin.androidx.compose.get
 
@@ -38,25 +45,48 @@ fun PokemonDetailsScreen(
     val pokemonDetails = viewModel.pokemonDetails.collectAsState()
     val isLoading = viewModel.isLoading.collectAsState()
     val gotError = viewModel.gotError.collectAsState()
+    val isFavorite = viewModel.isFavorite.collectAsState()
 
     LaunchedEffect(pokemonDetails) {
         viewModel.fetchDetails(name)
     }
-    Content(
-        isLoading = isLoading.value,
-        gotError = gotError.value,
-        pokemonDetails = pokemonDetails.value
-    )
+
+    Scaffold(topBar = {
+        AppTopBar(
+            title = "Pokemon Details",
+            shouldDisplayBackButton = true,
+            trailingIcon = {
+                IconButton(onClick = {
+                    viewModel.didClickFavorite()
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.Favorite,
+                        contentDescription = null,
+                        tint = if(isFavorite.value) Color.Red else Color.LightGray
+                    )
+                }
+            },
+            iconTapAction = { navController.popBackStack() }
+        )
+    }) {
+        Content(
+            modifier = Modifier.padding(it),
+            isLoading = isLoading.value,
+            gotError = gotError.value,
+            pokemonDetails = pokemonDetails.value
+        )
+    }
 }
 
 @Composable
 private fun Content(
+    modifier: Modifier = Modifier,
     isLoading: Boolean,
     gotError: Boolean,
     pokemonDetails: PokemonDetailsModel?
 ) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         if(isLoading) {
