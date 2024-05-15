@@ -7,6 +7,7 @@ import androidx.room.Room
 import com.example.pokeapi_koin.details.PokemonDetailsRepository
 import com.example.pokeapi_koin.details.PokemonDetailsRepositoryInterface
 import com.example.pokeapi_koin.details.PokemonDetailsViewModel
+import com.example.pokeapi_koin.favoritelist.FavoriteListViewModel
 import com.example.pokeapi_koin.list.PokemonListDataSourceFactory
 import com.example.pokeapi_koin.list.PokemonListDataSourceFactoryInterface
 import com.example.pokeapi_koin.list.PokemonListPagingSource
@@ -57,8 +58,10 @@ val appModule = module {
     single { ViewModelFactory(get()) }
 
     single<PokemonDetailsRepositoryInterface> { PokemonDetailsRepository(get()) }
-    single<FavoritesRepositoryInterface> { FavoritesRepository(get()) }
     viewModel { PokemonDetailsViewModel(get(), get()) }
+
+    single<FavoritesRepositoryInterface> { FavoritesRepository(get()) }
+    viewModel { FavoriteListViewModel(get()) }
 }
 
 fun providePokemonDao(database: PokemonDatabase): PokemonDao {

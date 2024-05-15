@@ -61,7 +61,7 @@ fun PokemonListScreen(
             modifier = Modifier
                 .padding(bottom = 16.dp)
         ) {
-            // TO DO
+           navController.navigate("favorites")
         }
     }) {
         Surface(
